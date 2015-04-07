@@ -330,6 +330,7 @@ window.plugin.drawTools.manualOpt = function() {
              ? '<a onclick="window.plugin.drawTools.optExport();return false;" tabindex="0">Export Drawn Items</a>' : '')
            + '<a onclick="window.plugin.drawTools.optReset();return false;" tabindex="0">Reset Drawn Items</a>'
            + '<a onclick="window.plugin.drawTools.snapToPortals();return false;" tabindex="0">Snap to portals</a>'
+           + '<a onclick="window.plugin.drawTools.crossLinksExport();return false;" tabindex="0">Export Crosslinks</a>'
            + '</div>';
 
   dialog({
@@ -676,6 +677,25 @@ window.plugin.drawTools.boot = function() {
 
 }
 
+window.plugin.drawTools.crossLinksExport = function(){
+    if(window.plugin.crossLinks){
+        if (window.plugin.crossLinks.export){
+            var list = window.plugin.crossLinks.export();
+
+              var html = '<p>CSV:</p><textarea style="width:96%;height:100px" class="csvList" readonly onclick="$(\'.ui-dialog-drawtoolsSet-exportCrossLinks textarea.csvList\').select();">'+ list.csv +'</textarea>';
+                  html += '<p>JSON:</p><textarea style="width:96%;height:100px" class="jsonList" readonly onclick="$(\'.ui-dialog-drawtoolsSet-exportCrossLinks textarea.jsonList\').select();">'+ list.json +'</textarea>';
+
+              dialog({
+                html: html,
+                width: 600,
+                dialogClass: 'ui-dialog-drawtoolsSet-exportCrossLinks',
+                title: 'Export Cross Links'
+                });
+        } 
+    }else{
+       alert('Export crosslinks function requires Crosslinks plugin to be installed');   
+    }
+}
 
 var setup =  window.plugin.drawTools.loadExternals;
 

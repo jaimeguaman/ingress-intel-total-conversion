@@ -283,6 +283,60 @@ window.plugin.crossLinks.createLayer = function() {
     }
 }
 
+window.plugin.crossLinks.export = function(){
+    var guids = window.plugin.crossLinks.linkLayerGuids;
+    var crosslinkList = [];
+
+    for(guid in guids){
+        var crosslink = window.plugin.crossLinks.linkLayerGuids[guid]._latlngsinit;
+        
+        var origin = {
+            link: ['https://www.ingress.com/intel?ll=', crosslink[0].lat , ',', crosslink[0].lng, '&z=17&pll=', crosslink[0].lat, ',', crosslink[0].lng].join(''),
+            lat: crosslink[0].lat,
+            lng: crosslink[0].lng,
+        }
+            
+        var destination = {
+            lat: crosslink[1].lat,
+            lng: crosslink[1].lng,
+            link: ['https://www.ingress.com/intel?ll=', crosslink[1].lat , ',', crosslink[1].lng, '&z=17&pll=', crosslink[1].lat, ',', crosslink[1].lng].join('')               
+        }
+            
+        crosslinkList.push({
+            from:{
+                name: '?', //TO-DO if bookmarks plugin is loaded, try to resolve portals name
+                lat: origin.lat,
+                lng: origin.lng,
+                link: origin.link
+            },
+            to:{
+                name: '?', //TO-DO if bookmarks plugin is loaded, try to resolve portals name
+                lat: destination.lat,
+                lng: destination.lng,
+                link: destination.link
+            }
+        });          
+        
+    }
+    
+    var getCSV = function(list){
+        var CSVList = '';
+        list.forEach(function(crosslink){
+            CSVList += [crosslink.from.lat, ';', crosslink.from.lng, ';', crosslink.from.link, ';', crosslink.to.lat, ';', crosslink.to.lng, ';', crosslink.to.link].join('');
+            CSVList += '\n';
+        });
+        
+        return CSVList;
+    }
+    
+    return {
+        arr: crosslinkList,
+        json: JSON.stringify(crosslinkList),
+        csv: getCSV(crosslinkList)
+    }
+    
+}
+
 var setup = function() {
     if (window.plugin.drawTools === undefined) {
        alert("'Cross-Links' requires 'draw-tools'");
